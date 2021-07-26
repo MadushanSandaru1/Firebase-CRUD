@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+    <head>
+        <title>Firebase CRUD</title>
+    </head>
+    <body>
+        Name: <input type="text" id="namebox"> <br><br>
+        Roll No: <input type="text" id="rollbox"> <br><br>
+        Section: <input type="text" id="secbox"> <br><br>
+        Gender: <input type="text" id="genbox"> <br><br>
+
+        <button id="create">CREATE</button>
+        <button id="read">READ</button>
+        <button id="update">UPDATE</button>
+        <button id="delete">DELETE</button>
+
+        <!--Firebase Libraries-->
+        <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script> 
+
+        <script>
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "",             // please fill configuration
+                authDomain: "",         // please fill configuration
+                projectId: "",          // please fill configuration
+                storageBucket: "",      // please fill configuration
+                messagingSenderId: "",  // please fill configuration
+                appId: ""               // please fill configuration
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            var nameV, rollV, secV, genV;
+
+            function Ready() {
+                nameV = document.getElementById('namebox').value;
+                rollV = document.getElementById('rollbox').value;
+                secV = document.getElementById('secbox').value;
+                genV = document.getElementById('genbox').value;
+            }
+
+            document.getElementById('create').onclick = function() {
+                Ready();
+                firebase.database().ref('student/'+rollV).set({
+                    NameofStudent: nameV,
+                    RollNo: rollV,
+                    Section: secV,
+                    Gender: genV
+                });
+            }
+
+            document.getElementById('read').onclick = function() {
+                Ready();
+                firebase.database().ref('student/'+rollV).on('value', function(snapshot) {
+                    document.getElementById('namebox').value = snapshot.val().NameofStudent;
+                    document.getElementById('secbox').value = snapshot.val().Section;
+                    document.getElementById('genbox').value = snapshot.val().Gender;
+                });
+            }
+
+            document.getElementById('update').onclick = function() {
+                Ready();
+                firebase.database().ref('student/'+rollV).update({
+                    NameofStudent: nameV,
+                    Section: secV,
+                    Gender: genV
+                });
+            }
+
+            document.getElementById('delete').onclick = function() {
+                Ready();
+                firebase.database().ref('student/'+rollV).remove();
+            }
+        </script>
+    </body>
+</html>
